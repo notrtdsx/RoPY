@@ -28,7 +28,7 @@ MAX_ID_LENGTH = 12  # Maximum reasonable length for Roblox user ID
 MAX_USER_ID = 10_000_000_000  # Max ~10 billion (current Roblox IDs are around 7-8 billion)
 
 # Allowed URL schemes for avatar URLs
-ALLOWED_URL_SCHEMES = ('https', 'http')
+ALLOWED_URL_SCHEMES = ('https',)  # HTTPS only for security
 ALLOWED_AVATAR_DOMAINS = ('roblox.com', 'rbxcdn.com', 'tr.rbxcdn.com', 't0.rbxcdn.com', 't1.rbxcdn.com', 't2.rbxcdn.com', 't3.rbxcdn.com', 't4.rbxcdn.com', 't5.rbxcdn.com', 't6.rbxcdn.com', 't7.rbxcdn.com')
 
 def calculate_retry_delay(attempt: int) -> float:
@@ -208,7 +208,7 @@ def fetch_user_information(user_id: str, session: Optional[requests.Session] = N
                             try:
                                 delay = min(float(retry_after), MAX_RETRY_DELAY)
                             except (ValueError, TypeError):
-                                pass
+                                logger.warning(f"Could not parse Retry-After header: {retry_after}")
                         
                         logger.warning(f"Rate limit hit. Waiting {delay:.2f} seconds before retry...")
                         print(f"Rate limited. Retrying in {delay:.1f} seconds...")
@@ -296,11 +296,6 @@ def fetch_user_information(user_id: str, session: Optional[requests.Session] = N
                     time.sleep(delay)
                     continue
                 print("A network error occurred. Please check your internet connection.")
-                return
-                
-            except JSONDecodeError as json_err:
-                logger.error(f"JSON decode error: {json_err}")
-                print("Error: Received malformed response from server.")
                 return
                 
             except Exception as err:
@@ -402,7 +397,7 @@ def validate_user_id(user_id: str) -> bool:
     # Convert to integer safely to check bounds
     try:
         user_id_int = int(stripped_id)
-    except (ValueError, OverflowError):
+    except ValueError:
         error_msg = "Error: ID is not a valid number."
         print(error_msg)
         logger.warning(f"Could not parse ID as integer: {user_id}")
