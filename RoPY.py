@@ -79,7 +79,8 @@ def validate_avatar_url(url: str) -> str:
             logger.warning("URL missing domain")
             return "Invalid URL"
         
-        # Validate domain is from Roblox
+        # Validate domain is from Roblox (exact match or proper subdomain)
+        # The '.' prefix in endswith prevents suffix attacks like 'evilroblox.com'
         domain = parsed.netloc.lower()
         is_valid_domain = any(
             domain == allowed or domain.endswith('.' + allowed)
@@ -235,8 +236,8 @@ def fetch_user_information(user_id: str, session: Optional[requests.Session] = N
                 validated_avatar_url = validate_avatar_url(raw_avatar_url)
                 
                 user_info: Dict[str, Any] = {
-                    "username": str(data.get("name", "Unknown")) if data.get("name") else "Unknown",
-                    "display_name": str(data.get("displayName", "Unknown")) if data.get("displayName") else "Unknown",
+                    "username": data.get("name") or "Unknown",
+                    "display_name": data.get("displayName") or "Unknown",
                     "created_date": parse_date(data.get("created")),
                     "avatar_url": validated_avatar_url,
                     "followers_count": safe_get_count(data, "followersCount"),
@@ -448,7 +449,7 @@ def main() -> None:
                 sys.exit(0)
                 
             if validate_user_id(user_input):
-                fetch_user_information(user_input.strip(), session)
+                fetch_user_information(user_input, session)
                 
                 while True:
                     try:
