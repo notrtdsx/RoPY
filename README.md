@@ -6,7 +6,7 @@
 - Fetch Roblox user profile information: username, display name, creation date, avatar URL, and more.
 - Retrieve follower and friend counts for any user.
 - Check if a user is banned on Roblox.
-- Supports both English.
+- Supports English.
 
 ## Usage 🛠️
 1. **Clone the repository**:
