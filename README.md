@@ -1,4 +1,6 @@
-# RoPY
+# This project has moved to Codeberg: https://codeberg.org/notrtdsx/RoPY
+
+## RoPY
 
 **RoPY** is a simple Python script that fetches detailed information about any Roblox user by utilizing Roblox's public API. This script provides essential user details such as username, display name, creation date, avatar URL, and more.
 
