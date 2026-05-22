@@ -1,4 +1,4 @@
-# This project has moved to Codeberg: https://codeberg.org/notrtdsx/RoPY
+# This project is on Codeberg too: https://codeberg.org/notrtdsx/RoPY
 
 ## RoPY
 
